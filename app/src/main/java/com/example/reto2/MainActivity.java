@@ -33,9 +33,6 @@ public class MainActivity extends AppCompatActivity implements AdapterPlaylist.O
     private RecyclerView lista_playlist;
     private AdapterPlaylist adapterPlaylist;
 
-    private ArrayList<PlaylistModel> playList;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements AdapterPlaylist.O
         btn_buscar = findViewById(R.id.btn_buscar);
         lista_playlist = findViewById(R.id.lista_playlist);
 
-        playList = new ArrayList<>();
-
+        adapterPlaylist = new AdapterPlaylist();
+        adapterPlaylist.setListener(this);
 
         new Thread(() -> {
             new ServiceManager.PlaylistGET(new ServiceManager.PlaylistGET.OnResponseListener() {
@@ -72,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements AdapterPlaylist.O
                                 //playModel.setDescripcion(play.getString("description"));
                                 playModel.setNum_fans(play.getInt("fans"));
 
-                                playList.add(playModel);
+                                adapterPlaylist.agregarPlayList(playModel);
 
                             }
 
@@ -85,17 +82,54 @@ public class MainActivity extends AppCompatActivity implements AdapterPlaylist.O
             });
         }).start();
 
-        for(int j=0; j<playList.size();j++){
+        btn_buscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            PlaylistModel play= playList.get(j);
+                adapterPlaylist = new AdapterPlaylist();
+                adapterPlaylist.setListener(MainActivity.this);
+                String busqueda = edit_playlist.getText().toString();
 
-            Log.e(">>>>>", play.getNombre_lista());
+                new Thread(() -> {
+                    new ServiceManager.SearchPlaylistGET(new ServiceManager.SearchPlaylistGET.OnResponseListener() {
+                        @Override
+                        public void onResponse(String response) {
+                            // response = "https://api.deezer.com/playlist/908622995";
+                            runOnUiThread(() -> {
+                                try {
+                                    String resp = response + edit_playlist.getText().toString();
+                                    JSONObject jsonObject = new JSONObject(resp);
+                                    JSONArray allPlayList = jsonObject.getJSONArray("data");
 
-        }
+                                    for(int i=0;i<allPlayList.length();i++){
 
-        adapterPlaylist = new AdapterPlaylist(playList);
-        adapterPlaylist.setListener(this);
-        lista_playlist.setLayoutManager(new LinearLayoutManager(this));
+                                        JSONObject play = allPlayList.getJSONObject(i);
+                                        JSONObject user = play.getJSONObject("user");
+
+                                        PlaylistModel playModel = new PlaylistModel();
+                                        playModel.setNombre_lista(play.getString("title"));
+                                        playModel.setNombre_usuario(user.getString("name"));
+                                        playModel.setNum_canciones(play.getInt("nb_tracks"));
+                                        playModel.setImagen(play.get("picture").toString());
+                                        //playModel.setDescripcion(play.getString("description"));
+                                        playModel.setNum_fans(0);
+
+                                        adapterPlaylist.agregarPlayList(playModel);
+
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            });
+                        }
+                    },busqueda);
+                }).start();
+            }
+        });
+
+        lista_playlist.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         lista_playlist.setAdapter(adapterPlaylist);
         lista_playlist.setHasFixedSize(true);
 

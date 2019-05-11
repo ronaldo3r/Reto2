@@ -22,7 +22,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp">
 
-        <EditText android:layout_width="340dp"
+        <EditText android:layout_width="300dp"
             android:layout_height="60dp"
             android:id="@+id/edit_playlist"
             android:hint="Buscar una lista de reproducción"/>

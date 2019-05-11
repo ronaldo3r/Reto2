@@ -33,7 +33,7 @@ public class AdapterPlaylist extends RecyclerView.Adapter<AdapterPlaylist.Custom
         }
     }
 
-    public AdapterPlaylist(ArrayList<PlaylistModel> playList){
+    public AdapterPlaylist(){
         data = new ArrayList<>();
     }
 
@@ -51,7 +51,7 @@ public class AdapterPlaylist extends RecyclerView.Adapter<AdapterPlaylist.Custom
                 .into((ImageView) holder.root.findViewById(R.id.renglon_playlist_img));
         ((TextView) holder.root.findViewById(R.id.renglon_playlist_nomLis)).setText(data.get(position).getNombre_lista());
         ((TextView) holder.root.findViewById(R.id.renglon_playlist_nomUsu)).setText(data.get(position).getNombre_usuario());
-        ((TextView) holder.root.findViewById(R.id.renglon_playlist_numItems)).setText(data.get(position).getNum_canciones());
+        ((TextView) holder.root.findViewById(R.id.renglon_playlist_numItems)).setText(""+data.get(position).getNum_canciones());
 
 //        storage = FirebaseStorage.getInstance();
 //        StorageReference ref = storage.getReference().child("profiles").child(data.get(position).getTelefono());
@@ -69,6 +69,11 @@ public class AdapterPlaylist extends RecyclerView.Adapter<AdapterPlaylist.Custom
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public void agregarPlayList(PlaylistModel play){
+        data.add(play);
+        notifyDataSetChanged();
     }
 
     //OBSERVER
