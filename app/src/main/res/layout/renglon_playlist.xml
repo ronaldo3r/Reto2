@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/renglon_playlist_img"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/app_name"/>
+
+        <LinearLayout
+            android:layout_marginLeft="65dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/renglon_playlist_nomLis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre lista"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/renglon_playlist_nomUsu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del usuario creador"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/renglon_playlist_numItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Número de items"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
