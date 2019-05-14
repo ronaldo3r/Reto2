@@ -5,6 +5,7 @@ import java.util.List;
 
 public class PlaylistModel {
 
+    private int id;
     private String imagen;
     private String nombre_lista;
     private String nombre_usuario;
@@ -17,7 +18,8 @@ public class PlaylistModel {
 
     }
 
-    public PlaylistModel(String imagen, String nombre_lista, String nombre_usuario, String descripcion, int num_canciones, int num_fans) {
+    public PlaylistModel(int id, String imagen, String nombre_lista, String nombre_usuario, String descripcion, int num_canciones, int num_fans) {
+        this.id=id;
         this.imagen = imagen;
         this.nombre_lista = nombre_lista;
         this.nombre_usuario = nombre_usuario;
@@ -26,6 +28,14 @@ public class PlaylistModel {
         this.num_fans = num_fans;
         lista_canciones = new ArrayList<>();
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getImagen() {

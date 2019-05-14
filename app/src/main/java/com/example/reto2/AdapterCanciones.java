@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.reto2.Model.CancionModel;
+import com.example.reto2.Model.PlaylistModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -55,6 +56,13 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.Cust
         ((TextView) holder.root.findViewById(R.id.renglon_cancion_artista)).setText(data.get(position).getArtista());
         ((TextView) holder.root.findViewById(R.id.renglon_cancion_anio)).setText(data.get(position).getAnio());
 
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(data.get(position));
+            }
+        });
+
 //        storage = FirebaseStorage.getInstance();
 //        StorageReference ref = storage.getReference().child("profiles").child(data.get(position).getTelefono());
 //        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -76,7 +84,11 @@ public class AdapterCanciones extends RecyclerView.Adapter<AdapterCanciones.Cust
     //OBSERVER
     public interface OnItemClickListener{
         void onItemClick(CancionModel cancion);
-        void onChat(CancionModel cancion);
+    }
+
+    public void agregarCancion(CancionModel cancion){
+        data.add(cancion);
+        notifyDataSetChanged();
     }
 
     private OnItemClickListener listener;

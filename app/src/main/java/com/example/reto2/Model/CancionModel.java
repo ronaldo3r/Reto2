@@ -2,6 +2,7 @@ package com.example.reto2.Model;
 
 public class CancionModel {
 
+    private int id;
     private String imagen;
     private String nombre;
     private String artista;
@@ -13,11 +14,20 @@ public class CancionModel {
 
     }
 
-    public CancionModel(String nombre, String artista, String album, int duracion) {
+    public CancionModel(int id, String nombre, String artista, String album, int duracion) {
+        this.id=id;
         this.nombre = nombre;
         this.artista = artista;
         this.album = album;
         this.duracion = duracion;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {

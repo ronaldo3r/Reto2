@@ -1,7 +1,9 @@
 package com.example.reto2;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,10 +19,11 @@ public class AdapterPlaylist extends RecyclerView.Adapter<AdapterPlaylist.Custom
 
     ArrayList<PlaylistModel> data;
     //FirebaseStorage storage;
+    private Context context;
 
-    public void showAllAmigos(ArrayList<PlaylistModel> allAmigos) {
-        for(int i = 0 ; i<allAmigos.size() ; i++){
-            if(!data.contains(allAmigos.get(i))) data.add(allAmigos.get(i));
+    public void showAllPlayList(ArrayList<PlaylistModel> allPlaylist) {
+        for(int i = 0 ; i<allPlaylist.size() ; i++){
+            if(!data.contains(allPlaylist.get(i))) data.add(allPlaylist.get(i));
         }
         notifyDataSetChanged();
     }
@@ -53,6 +56,12 @@ public class AdapterPlaylist extends RecyclerView.Adapter<AdapterPlaylist.Custom
         ((TextView) holder.root.findViewById(R.id.renglon_playlist_nomUsu)).setText(data.get(position).getNombre_usuario());
         ((TextView) holder.root.findViewById(R.id.renglon_playlist_numItems)).setText(""+data.get(position).getNum_canciones());
 
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(data.get(position));
+            }
+        });
 //        storage = FirebaseStorage.getInstance();
 //        StorageReference ref = storage.getReference().child("profiles").child(data.get(position).getTelefono());
 //        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -79,7 +88,6 @@ public class AdapterPlaylist extends RecyclerView.Adapter<AdapterPlaylist.Custom
     //OBSERVER
     public interface OnItemClickListener{
         void onItemClick(PlaylistModel playlist);
-        void onChat(PlaylistModel playlist);
     }
 
     private AdapterPlaylist.OnItemClickListener listener;

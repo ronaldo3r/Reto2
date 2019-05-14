@@ -44,7 +44,7 @@
         android:textColor="@android:color/black"/>
 
     <TextView android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="Descripción de la Playlist"
         android:id="@+id/txt_desc_playlist"

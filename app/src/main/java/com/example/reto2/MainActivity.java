@@ -1,5 +1,6 @@
 package com.example.reto2;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements AdapterPlaylist.O
             new ServiceManager.PlaylistGET(new ServiceManager.PlaylistGET.OnResponseListener() {
                 @Override
                 public void onResponse(String response) {
-                   // response = "https://api.deezer.com/playlist/908622995";
+
                     runOnUiThread(() -> {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -62,16 +64,25 @@ public class MainActivity extends AppCompatActivity implements AdapterPlaylist.O
                                 JSONObject user = play.getJSONObject("creator");
 
                                 PlaylistModel playModel = new PlaylistModel();
+                                playModel.setId(play.getInt("id"));
                                 playModel.setNombre_lista(play.getString("title"));
                                 playModel.setNombre_usuario(user.getString("name"));
                                 playModel.setNum_canciones(play.getInt("nb_tracks"));
                                 playModel.setImagen(play.get("picture").toString());
-                                //playModel.setDescripcion(play.getString("description"));
+                                if (play.has("description")) {
+                                    playModel.setDescripcion(play.getString("description"));
+                                }else{
+                                    playModel.setDescripcion("No hay descripción");
+                                }
                                 playModel.setNum_fans(play.getInt("fans"));
 
                                 adapterPlaylist.agregarPlayList(playModel);
 
                             }
+
+                            lista_playlist.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                            lista_playlist.setAdapter(adapterPlaylist);
+                            lista_playlist.setHasFixedSize(true);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -88,50 +99,62 @@ public class MainActivity extends AppCompatActivity implements AdapterPlaylist.O
 
                 adapterPlaylist = new AdapterPlaylist();
                 adapterPlaylist.setListener(MainActivity.this);
-                String busqueda = edit_playlist.getText().toString();
 
-                new Thread(() -> {
-                    new ServiceManager.SearchPlaylistGET(new ServiceManager.SearchPlaylistGET.OnResponseListener() {
-                        @Override
-                        public void onResponse(String response) {
-                            // response = "https://api.deezer.com/playlist/908622995";
-                            runOnUiThread(() -> {
-                                try {
-                                    String resp = response + edit_playlist.getText().toString();
-                                    JSONObject jsonObject = new JSONObject(resp);
-                                    JSONArray allPlayList = jsonObject.getJSONArray("data");
+                if(!edit_playlist.getText().toString().equals("")&&edit_playlist.getText()!=null) {
 
-                                    for(int i=0;i<allPlayList.length();i++){
+                    new Thread(() -> {
+                        new ServiceManager.SearchPlaylistGET(new ServiceManager.SearchPlaylistGET.OnResponseListener() {
+                            @Override
+                            public void onResponse(String response) {
 
-                                        JSONObject play = allPlayList.getJSONObject(i);
-                                        JSONObject user = play.getJSONObject("user");
+                                runOnUiThread(() -> {
+                                    try {
 
-                                        PlaylistModel playModel = new PlaylistModel();
-                                        playModel.setNombre_lista(play.getString("title"));
-                                        playModel.setNombre_usuario(user.getString("name"));
-                                        playModel.setNum_canciones(play.getInt("nb_tracks"));
-                                        playModel.setImagen(play.get("picture").toString());
-                                        //playModel.setDescripcion(play.getString("description"));
-                                        playModel.setNum_fans(0);
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        JSONArray allPlayList = jsonObject.getJSONArray("data");
 
-                                        adapterPlaylist.agregarPlayList(playModel);
+                                        for (int i = 0; i < allPlayList.length(); i++) {
 
+                                            JSONObject play = allPlayList.getJSONObject(i);
+                                            JSONObject user = play.getJSONObject("user");
+
+                                            PlaylistModel playModel = new PlaylistModel();
+                                            playModel.setId(play.getInt("id"));
+                                            playModel.setNombre_lista(play.getString("title"));
+                                            playModel.setNombre_usuario(user.getString("name"));
+                                            playModel.setNum_canciones(play.getInt("nb_tracks"));
+                                            playModel.setImagen(play.get("picture").toString());
+                                            if (play.has("description")) {
+                                                playModel.setDescripcion(play.getString("description"));
+                                            }else{
+                                                playModel.setDescripcion("No hay descripción");
+                                            }
+                                            if (play.has("fans")) {
+                                                playModel.setNum_fans(play.getInt("fans"));
+                                            }else {
+                                                playModel.setNum_fans(0);
+                                            }
+
+                                            adapterPlaylist.agregarPlayList(playModel);
+
+                                        }
+
+                                        lista_playlist.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                                        lista_playlist.setAdapter(adapterPlaylist);
+                                        lista_playlist.setHasFixedSize(true);
+
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            });
-                        }
-                    },busqueda);
-                }).start();
+                                });
+                            }
+                        }, edit_playlist.getText().toString());
+                    }).start();
+                }
             }
         });
-
-        lista_playlist.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        lista_playlist.setAdapter(adapterPlaylist);
-        lista_playlist.setHasFixedSize(true);
 
     }
 
@@ -139,10 +162,17 @@ public class MainActivity extends AppCompatActivity implements AdapterPlaylist.O
     @Override
     public void onItemClick(PlaylistModel playlist) {
 
+        Intent i = new Intent(MainActivity.this, ListaCanciones.class);
+
+        i.putExtra("Id", playlist.getId());
+        i.putExtra("Imagen", playlist.getImagen());
+        i.putExtra("NombrePlay", playlist.getNombre_lista());
+        i.putExtra("Descripcion",playlist.getDescripcion());
+        i.putExtra("NumCan",playlist.getNum_canciones());
+        i.putExtra("NumFan",playlist.getNum_fans());
+
+        startActivity(i);
+
     }
 
-    @Override
-    public void onChat(PlaylistModel playlist) {
-
-    }
 }

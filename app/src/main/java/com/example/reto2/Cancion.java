@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 public class Cancion extends AppCompatActivity {
 
     private Button btn_atras_cancion;
@@ -38,12 +40,20 @@ public class Cancion extends AppCompatActivity {
         txt_linea_cancion = findViewById(R.id.txt_linea_cancion);
         btn_escuchar = findViewById(R.id.btn_escuchar);
 
+        Intent i = getIntent();
+
+        Picasso.get()
+                .load(i.getStringExtra("Imagen"))
+                .into(image_cancion);
+        txt_nombre_cancion.setText(i.getStringExtra("Nombre"));
+        txt_artista_cancion.setText(i.getStringExtra("Artista"));
+        txt_album_cancion.setText(i.getStringExtra("Album"));
+        txt_dura_cancion.setText("Duración: "+i.getIntExtra("Duracion", 0));
+
         btn_atras_cancion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Cancion.this, ListaCanciones.class);
-                startActivity(i);
-                finish();
+                onBackPressed();
             }
         });
 
