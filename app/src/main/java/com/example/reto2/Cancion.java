@@ -1,6 +1,7 @@
 package com.example.reto2;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +22,6 @@ public class Cancion extends AppCompatActivity {
     private TextView txt_artista_cancion;
     private TextView txt_album_cancion;
     private TextView txt_dura_cancion;
-    private TextView txt_linea_cancion;
     private Button btn_escuchar;
 
     @Override
@@ -37,7 +37,6 @@ public class Cancion extends AppCompatActivity {
         txt_artista_cancion = findViewById(R.id.txt_art_cancion);
         txt_album_cancion = findViewById(R.id.txt_album_cancion);
         txt_dura_cancion = findViewById(R.id.txt_dura_cancion);
-        txt_linea_cancion = findViewById(R.id.txt_linea_cancion);
         btn_escuchar = findViewById(R.id.btn_escuchar);
 
         Intent i = getIntent();
@@ -48,18 +47,31 @@ public class Cancion extends AppCompatActivity {
         txt_nombre_cancion.setText(i.getStringExtra("Nombre"));
         txt_artista_cancion.setText(i.getStringExtra("Artista"));
         txt_album_cancion.setText(i.getStringExtra("Album"));
-        txt_dura_cancion.setText("Duración: "+i.getIntExtra("Duracion", 0));
+        txt_dura_cancion.setText("Duración: "+i.getIntExtra("Duracion", 0)+" segundos");
+
+        int id = i.getIntExtra("Id",0);
 
         btn_atras_cancion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+                finish();
             }
         });
 
         btn_escuchar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent deezerLauncher = getPackageManager().getLaunchIntentForPackage("deezer.android.app");
+                if(deezerLauncher!=null){
+                    String uri = "deezer://www.deezer.com/track/"+id;
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    startActivity(intent);
+                }else{
+                    Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.deezer.com/track/"+id));
+                    startActivity(browser);
+                }
 
             }
         });

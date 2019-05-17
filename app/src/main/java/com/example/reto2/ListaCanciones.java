@@ -142,6 +142,7 @@ public class ListaCanciones extends AppCompatActivity implements AdapterCancione
             @Override
             public void onClick(View v) {
                 onBackPressed();
+                finish();
             }
         });
     }

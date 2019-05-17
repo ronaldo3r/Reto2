@@ -14,6 +14,7 @@
         android:id="@+id/txt_buscar_playlist"
         android:text="Buscar Playlist"
         android:textSize="30dp"
+        android:textStyle="bold"
         android:textColor="@android:color/black"
         android:textAlignment="center"/>
 
@@ -22,15 +23,16 @@
         android:orientation="horizontal"
         android:layout_marginTop="20dp">
 
-        <EditText android:layout_width="300dp"
+        <EditText android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:id="@+id/edit_playlist"
-            android:hint="Buscar una lista de reproducción"/>
+            android:hint="Buscar una lista de reproducción       "
+            android:layout_marginRight="20dp"/>
 
         <Button android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/btn_buscar"
-            android:background="@mipmap/ic_launcher"/>
+            android:background="@drawable/busqueda"/>
 
     </LinearLayout>
 
